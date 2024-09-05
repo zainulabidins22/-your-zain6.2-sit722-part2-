@@ -1,0 +1,38 @@
+# Write Kubernetes Deployment Script
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-catalog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: book-catalog
+  template:
+    metadata:
+      labels:
+        app: book-catalog
+    spec:
+      containers: 
+      - name: book-catalog
+        image: week08:1
+        ports:
+        - containerPort: 8000
+        imagePullPolicy: Never
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://zain_fqml_user:jLbKe00j8OoQWVDNvqugMQT69XaMoniU@dpg-crcp7prv2p9s73ckacug-a.oregon-postgres.render.com/zain_fqml"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-catalog
+spec:
+  selector:
+    app: book-catalog
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30000
